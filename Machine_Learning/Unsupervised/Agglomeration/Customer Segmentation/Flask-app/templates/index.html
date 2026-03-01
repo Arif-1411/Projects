@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Agglomerative Clustering</title>
+</head>
+<body>
+
+<h1>Agglomerative Hierarchical Clustering</h1>
+<h3>UCI Wholesale Customers Dataset</h3>
+
+<hr>
+
+<!-- ====== EVALUATION METRICS ====== -->
+<h2>Evaluation Metrics</h2>
+<table border="1" cellpadding="5">
+    <tr><td><b>Algorithm</b></td><td>Agglomerative Clustering</td></tr>
+    <tr><td><b>Best Linkage</b></td><td>{{ bundle.metrics.best_linkage }}</td></tr>
+    <tr><td><b>Number of Clusters</b></td><td>{{ bundle.metrics.n_clusters }}</td></tr>
+    <tr><td><b>Total Samples</b></td><td>{{ bundle.metrics.n_samples }}</td></tr>
+    <tr><td><b>Silhouette Score</b></td><td>{{ bundle.metrics.silhouette }} (best=1, &gt;0.5 good)</td></tr>
+    <tr><td><b>Calinski-Harabasz</b></td><td>{{ bundle.metrics.calinski_harabasz }} (higher=better)</td></tr>
+    <tr><td><b>Davies-Bouldin</b></td><td>{{ bundle.metrics.davies_bouldin }} (lower=better, 0=perfect)</td></tr>
+</table>
+
+<hr>
+
+<!-- ====== SILHOUETTE SCORES FOR EACH K ====== -->
+<h2>Silhouette Score for Each K</h2>
+<table border="1" cellpadding="5">
+    <tr>
+        <th>K (Clusters)</th>
+        <th>Silhouette Score</th>
+        <th></th>
+    </tr>
+    {% for k, score in bundle.k_scores.items() %}
+    <tr>
+        <td>{{ k }}</td>
+        <td>{{ score }}</td>
+        <td>{% if k|string == bundle.metrics.n_clusters|string %} BEST{% endif %}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<hr>
+
+<!-- ====== LINKAGE COMPARISON ====== -->
+<h2>Linkage Comparison</h2>
+<table border="1" cellpadding="5">
+    <tr>
+        <th>Linkage</th>
+        <th>Silhouette</th>
+        <th>Calinski-Harabasz</th>
+        <th>Davies-Bouldin</th>
+        <th></th>
+    </tr>
+    {% for r in bundle.linkage_results %}
+    <tr>
+        <td>{{ r.linkage }}</td>
+        <td>{{ r.silhouette }}</td>
+        <td>{{ r.calinski_harabasz }}</td>
+        <td>{{ r.davies_bouldin }}</td>
+        <td>{% if r.linkage == bundle.metrics.best_linkage %} BEST{% endif %}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<hr>
+
+<!-- ====== CLUSTER PROFILES ====== -->
+<h2>Cluster Profiles</h2>
+{% for p in bundle.profiles %}
+<h3>Cluster {{ p.cluster }} ({{ p.count }} customers — {{ p.pct }}%)</h3>
+<table border="1" cellpadding="5">
+    <tr>
+        <th>Feature</th>
+        <th>Mean Spending</th>
+    </tr>
+    {% for feat, val in p.means.items() %}
+    <tr>
+        <td>{{ feat }}</td>
+        <td>{{ val }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% if p.high_spending %}
+<p><b>HIGH spending:</b> {{ p.high_spending | join(', ') }}</p>
+{% endif %}
+{% if p.low_spending %}
+<p><b>LOW spending:</b> {{ p.low_spending | join(', ') }}</p>
+{% endif %}
+<br>
+{% endfor %}
+
+<hr>
+
+<!-- ====== RETRAIN ====== -->
+<h2>Retrain Model</h2>
+<form action="/train" method="post">
+    <button type="submit">Retrain Model</button>
+</form>
+
+<hr>
+
+<!-- ====== PREDICT NEW CUSTOMER ====== -->
+<h2>Predict New Customer Cluster</h2>
+<p>Enter annual spending amounts:</p>
+
+<form action="/predict" method="post">
+    <table border="1" cellpadding="5">
+        <tr>
+            <td><b>Fresh</b> (annual spending)</td>
+            <td><input type="number" name="Fresh" step="0.01" value="12000" required></td>
+        </tr>
+        <tr>
+            <td><b>Milk</b> (annual spending)</td>
+            <td><input type="number" name="Milk" step="0.01" value="5000" required></td>
+        </tr>
+        <tr>
+            <td><b>Grocery</b> (annual spending)</td>
+            <td><input type="number" name="Grocery" step="0.01" value="8000" required></td>
+        </tr>
+        <tr>
+            <td><b>Frozen</b> (annual spending)</td>
+            <td><input type="number" name="Frozen" step="0.01" value="2000" required></td>
+        </tr>
+        <tr>
+            <td><b>Detergents_Paper</b> (annual spending)</td>
+            <td><input type="number" name="Detergents_Paper" step="0.01" value="3000" required></td>
+        </tr>
+        <tr>
+            <td><b>Delicassen</b> (annual spending)</td>
+            <td><input type="number" name="Delicassen" step="0.01" value="1000" required></td>
+        </tr>
+    </table>
+    <br>
+    <button type="submit">Predict Cluster</button>
+</form>
+
+</body>
+</html>

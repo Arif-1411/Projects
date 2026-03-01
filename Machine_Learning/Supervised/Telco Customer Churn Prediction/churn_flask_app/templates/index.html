@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Telco Churn Prediction</title>
+</head>
+<body>
+    <h1>Telco Customer Churn Prediction</h1>
+
+    <h2>Model Evaluation Metrics</h2>
+    <table border="1">
+        <tr><td>Accuracy</td><td>{{ metrics.accuracy }}</td></tr>
+        <tr><td>Precision</td><td>{{ metrics.precision }}</td></tr>
+        <tr><td>Recall</td><td>{{ metrics.recall }}</td></tr>
+        <tr><td>F1 Score</td><td>{{ metrics.f1_score }}</td></tr>
+        <tr><td>ROC AUC</td><td>{{ metrics.roc_auc }}</td></tr>
+        <tr><td>Train Rows</td><td>{{ metrics.train_rows }}</td></tr>
+        <tr><td>Test Rows</td><td>{{ metrics.test_rows }}</td></tr>
+        <tr><td>TN</td><td>{{ metrics.tn }}</td></tr>
+        <tr><td>FP</td><td>{{ metrics.fp }}</td></tr>
+        <tr><td>FN</td><td>{{ metrics.fn }}</td></tr>
+        <tr><td>TP</td><td>{{ metrics.tp }}</td></tr>
+    </table>
+
+    <form action="/train" method="post">
+        <button type="submit">Retrain Model</button>
+    </form>
+
+    <hr>
+
+    <h2>Enter New Customer Data</h2>
+    <form action="/predict" method="post">
+        <label>gender</label>
+        <select name="gender">
+            <option>Female</option>
+            <option>Male</option>
+        </select><br><br>
+
+        <label>SeniorCitizen</label>
+        <select name="SeniorCitizen">
+            <option value="0">0</option>
+            <option value="1">1</option>
+        </select><br><br>
+
+        <label>Partner</label>
+        <select name="Partner">
+            <option>No</option>
+            <option>Yes</option>
+        </select><br><br>
+
+        <label>Dependents</label>
+        <select name="Dependents">
+            <option>No</option>
+            <option>Yes</option>
+        </select><br><br>
+
+        <label>tenure</label>
+        <input type="number" name="tenure" min="0" max="100" required><br><br>
+
+        <label>PhoneService</label>
+        <select name="PhoneService">
+            <option>Yes</option>
+            <option>No</option>
+        </select><br><br>
+
+        <label>MultipleLines</label>
+        <select name="MultipleLines">
+            <option>No</option>
+            <option>Yes</option>
+        </select><br><br>
+
+        <label>InternetService</label>
+        <select name="InternetService">
+            <option>DSL</option>
+            <option>Fiber optic</option>
+            <option>No</option>
+        </select><br><br>
+
+        <label>OnlineSecurity</label>
+        <select name="OnlineSecurity">
+            <option>No</option>
+            <option>Yes</option>
+        </select><br><br>
+
+        <label>OnlineBackup</label>
+        <select name="OnlineBackup">
+            <option>No</option>
+            <option>Yes</option>
+        </select><br><br>
+
+        <label>DeviceProtection</label>
+        <select name="DeviceProtection">
+            <option>No</option>
+            <option>Yes</option>
+        </select><br><br>
+
+        <label>TechSupport</label>
+        <select name="TechSupport">
+            <option>No</option>
+            <option>Yes</option>
+        </select><br><br>
+
+        <label>StreamingTV</label>
+        <select name="StreamingTV">
+            <option>No</option>
+            <option>Yes</option>
+        </select><br><br>
+
+        <label>StreamingMovies</label>
+        <select name="StreamingMovies">
+            <option>No</option>
+            <option>Yes</option>
+        </select><br><br>
+
+        <label>Contract</label>
+        <select name="Contract">
+            <option>Month-to-month</option>
+            <option>One year</option>
+            <option>Two year</option>
+        </select><br><br>
+
+        <label>PaperlessBilling</label>
+        <select name="PaperlessBilling">
+            <option>Yes</option>
+            <option>No</option>
+        </select><br><br>
+
+        <label>PaymentMethod</label>
+        <select name="PaymentMethod">
+            <option>Electronic check</option>
+            <option>Mailed check</option>
+            <option>Bank transfer (automatic)</option>
+            <option>Credit card (automatic)</option>
+        </select><br><br>
+
+        <label>MonthlyCharges</label>
+        <input type="number" step="0.01" name="MonthlyCharges" required><br><br>
+
+        <label>TotalCharges (optional)</label>
+        <input type="number" step="0.01" name="TotalCharges"><br><br>
+
+        <button type="submit">Predict</button>
+    </form>
+</body>
+</html>

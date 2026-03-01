@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Apriori Market Basket</title>
+</head>
+<body>
+    <h1>Apriori Market Basket Recommendation</h1>
+
+    <h2>Model Info</h2>
+    <table border="1" cellpadding="10">
+        <tr>
+            <td>Total Rules Generated</td>
+            <td>{{ total_rules }}</td>
+        </tr>
+    </table>
+
+    <br>
+    <form action="/train" method="post">
+        <button type="submit">Retrain Apriori Model</button>
+    </form>
+
+    <hr>
+
+    <h2>Get Recommendations</h2>
+
+    <h3>Available Items</h3>
+    <p>{{ all_items | join(', ') }}</p>
+
+    <form action="/predict" method="post">
+        <label>Enter Item Name (from above list):</label><br><br>
+        <input type="text" name="item" placeholder="e.g. milk" required>
+        <button type="submit">Recommend</button>
+    </form>
+</body>
+</html>

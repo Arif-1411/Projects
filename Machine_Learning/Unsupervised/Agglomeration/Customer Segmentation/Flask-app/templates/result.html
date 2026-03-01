@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prediction Result</title>
+</head>
+<body>
+
+<h1>Prediction Result</h1>
+
+<h2>Predicted Cluster: {{ predicted }}</h2>
+
+<hr>
+
+<h3>Input Data</h3>
+<table border="1" cellpadding="5">
+    <tr><th>Feature</th><th>Value</th></tr>
+    {% for key, val in input_data.items() %}
+    <tr><td>{{ key }}</td><td>{{ val }}</td></tr>
+    {% endfor %}
+</table>
+
+<hr>
+
+<h3>Distance to Each Cluster Center</h3>
+<table border="1" cellpadding="5">
+    <tr><th>Cluster</th><th>Distance</th><th></th></tr>
+    {% for cl, dist in distances.items() %}
+    <tr>
+        <td>{{ cl }}</td>
+        <td>{{ dist }}</td>
+        <td>{% if cl == predicted %} NEAREST{% endif %}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<hr>
+
+{% if profile %}
+<h3>Cluster {{ profile.cluster }} Profile</h3>
+<p>Customers in cluster: {{ profile.count }} ({{ profile.pct }}%)</p>
+
+<table border="1" cellpadding="5">
+    <tr><th>Feature</th><th>Cluster Mean Spending</th></tr>
+    {% for feat, val in profile.means.items() %}
+    <tr><td>{{ feat }}</td><td>{{ val }}</td></tr>
+    {% endfor %}
+</table>
+
+{% if profile.high_spending %}
+<p><b>HIGH spending:</b> {{ profile.high_spending | join(', ') }}</p>
+{% endif %}
+{% if profile.low_spending %}
+<p><b>LOW spending:</b> {{ profile.low_spending | join(', ') }}</p>
+{% endif %}
+{% endif %}
+
+<br>
+<a href="/">Back to Home</a>
+
+</body>
+</html>

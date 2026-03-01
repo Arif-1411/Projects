@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head><title>KMeans Result</title></head>
+<body>
+
+<h1>Prediction Result</h1>
+<h2>Segment: Cluster {{ predicted }}
+{% if profile %} — {{ profile.name }}{% endif %}</h2>
+<hr>
+
+<h3>Your Input</h3>
+<table border="1" cellpadding="5">
+    {% for k, v in input_data.items() %}
+    <tr><td><b>{{ k }}</b></td><td>{{ v }}</td></tr>
+    {% endfor %}
+</table>
+
+<hr>
+
+<h3>Distance to Each Center</h3>
+<table border="1" cellpadding="5">
+    <tr><th>Cluster</th><th>Distance</th><th></th></tr>
+    {% for cl, dist in distances.items() %}
+    <tr>
+        <td>{{ cl }}</td><td>{{ dist }}</td>
+        <td>{% if cl == predicted %} NEAREST{% endif %}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<hr>
+
+{% if profile %}
+<h3>Your Segment Profile</h3>
+<table border="1" cellpadding="5">
+    <tr><td><b>Name</b></td><td>{{ profile.name }}</td></tr>
+    <tr><td><b>Customers</b></td><td>{{ profile.count }} ({{ profile.pct }}%)</td></tr>
+    <tr><td><b>Gender</b></td><td>{{ profile.gender }}</td></tr>
+    <tr><td><b>Avg Age</b></td><td>{{ profile.means["Age"] }}</td></tr>
+    <tr><td><b>Avg Income</b></td><td>{{ profile.means["Annual Income (k$)"] }}k$</td></tr>
+    <tr><td><b>Avg Spending</b></td><td>{{ profile.means["Spending Score (1-100)"] }}</td></tr>
+</table>
+{% if profile.high %}<p><b>HIGH:</b> {{ profile.high|join(", ") }}</p>{% endif %}
+{% if profile.low %}<p><b>LOW:</b> {{ profile.low|join(", ") }}</p>{% endif %}
+{% endif %}
+
+<br><a href="/">Back to Home</a>
+</body>
+</html>

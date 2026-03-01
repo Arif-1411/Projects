@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recommendations</title>
+</head>
+<body>
+    <h1>Recommendations for "{{ item }}"</h1>
+
+    {% if recs %}
+    <table border="1" cellpadding="10">
+        <tr>
+            <td><strong>Recommended Item</strong></td>
+            <td><strong>Support</strong></td>
+            <td><strong>Confidence</strong></td>
+            <td><strong>Lift</strong></td>
+        </tr>
+        {% for r in recs %}
+        <tr>
+            <td>{{ r.item }}</td>
+            <td>{{ r.support }}</td>
+            <td>{{ r.confidence }}</td>
+            <td>{{ r.lift }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <!-- <p>
+        Support = frequency of bying pair<br>
+        Confidence = X konnal Y um vanguna probability<br>
+        Lift = random chance-il ninnu kitunnatil ethrametaram above anu
+    </p> -->
+
+    {% else %}
+    <p>No recommendations found. Try another item from the list.</p>
+    {% endif %}
+
+    <br>
+    <a href="/">Back</a>
+</body>
+</html>

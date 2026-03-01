@@ -2,7 +2,6 @@
 ============================================================
 IMAGE CLASSIFICATION USING CNN & TRANSFER LEARNING
 ============================================================
-Author: [Your Name]
 Technologies: Python, TensorFlow, Keras, CNN, Transfer Learning
 Dataset: CIFAR-10 (10 classes, 60000 images)
 
@@ -34,18 +33,13 @@ import os
 warnings.filterwarnings('ignore')
 
 # Check GPU availability
-print("=" * 60)
-print("SYSTEM INFORMATION")
-print("=" * 60)
 print(f"TensorFlow Version: {tf.__version__}")
 print(f"GPU Available: {tf.config.list_physical_devices('GPU')}")
-print("=" * 60)
 
 
 # =============================================
 # 2. LOAD AND EXPLORE DATASET
 # =============================================
-print("\n📦 Loading CIFAR-10 Dataset...")
 
 # CIFAR-10 - 60,000 color images (32x32) in 10 classes
 (X_train, y_train), (X_test, y_test) = keras.datasets.cifar10.load_data()
@@ -56,9 +50,6 @@ class_names = [
     'Dog', 'Frog', 'Horse', 'Ship', 'Truck'
 ]
 
-print(f"\n{'='*60}")
-print("DATASET INFORMATION")
-print(f"{'='*60}")
 print(f"Training Images Shape  : {X_train.shape}")
 print(f"Training Labels Shape  : {y_train.shape}")
 print(f"Testing Images Shape   : {X_test.shape}")
@@ -69,7 +60,6 @@ print(f"Color Channels         : {X_train.shape[3]} (RGB)")
 print(f"Pixel Value Range      : [{X_train.min()}, {X_train.max()}]")
 print(f"Training Samples       : {X_train.shape[0]}")
 print(f"Testing Samples        : {X_test.shape[0]}")
-print(f"{'='*60}")
 
 
 # =============================================
@@ -91,7 +81,6 @@ def plot_sample_images(X, y, class_names, num_samples=25):
     plt.tight_layout()
     plt.savefig('sample_images.png', dpi=150, bbox_inches='tight')
     plt.show()
-    print("✅ Sample images saved as 'sample_images.png'")
 
 
 # Class Distribution
@@ -118,10 +107,8 @@ def plot_class_distribution(y_train, y_test, class_names):
     plt.tight_layout()
     plt.savefig('class_distribution.png', dpi=150, bbox_inches='tight')
     plt.show()
-    print("✅ Class distribution saved as 'class_distribution.png'")
 
 
-print("\n📊 Visualizing Dataset...")
 plot_sample_images(X_train, y_train, class_names)
 plot_class_distribution(y_train, y_test, class_names)
 
@@ -129,7 +116,6 @@ plot_class_distribution(y_train, y_test, class_names)
 # =============================================
 # 4. DATA PREPROCESSING
 # =============================================
-print("\n⚙️  Preprocessing Data...")
 
 # Normalize pixel values to [0, 1]
 X_train_normalized = X_train.astype('float32') / 255.0
@@ -163,7 +149,6 @@ print(f"  Testing    : {X_test_normalized.shape[0]} samples")
 # =============================================
 # 5. DATA AUGMENTATION
 # =============================================
-print("\n🔄 Setting up Data Augmentation...")
 
 train_datagen = ImageDataGenerator(
     rotation_range=15,          # Random rotation (0-15 degrees)
@@ -208,28 +193,18 @@ def plot_augmented_images(datagen, X, y, class_names):
     plt.tight_layout()
     plt.savefig('augmented_images.png', dpi=150, bbox_inches='tight')
     plt.show()
-    print("✅ Augmented images saved as 'augmented_images.png'")
 
 
 plot_augmented_images(train_datagen, X_train_split, y_train_split, class_names)
-print("✅ Data Augmentation configured successfully!")
 
 
 # =============================================
 # 6. BUILD CNN MODEL FROM SCRATCH
 # =============================================
-print("\n" + "=" * 60)
-print("🏗️  BUILDING CNN MODEL FROM SCRATCH")
-print("=" * 60)
 
 
 def build_cnn_model():
-    """
-    Custom CNN Architecture:
-    - 3 Convolutional Blocks (Conv2D + BatchNorm + MaxPool + Dropout)
-    - Flatten + Dense layers
-    - Output: 10 classes (softmax)
-    """
+    
     model = models.Sequential(name="Custom_CNN_Model")
 
     # ---- Block 1 ----
@@ -295,18 +270,16 @@ cnn_model.compile(
 )
 
 # Model Summary
-print("\n📋 CNN Model Architecture:")
 cnn_model.summary()
 
 # Total parameters
 total_params = cnn_model.count_params()
-print(f"\n📊 Total Parameters: {total_params:,}")
+print(f"\n Total Parameters: {total_params:,}")
 
 
 # =============================================
 # 7. CALLBACKS SETUP
 # =============================================
-print("\n⚙️  Setting up Training Callbacks...")
 
 # Create directory for saved models
 os.makedirs('saved_models', exist_ok=True)
@@ -337,18 +310,14 @@ cnn_callbacks = [
     )
 ]
 
-print("✅ Callbacks configured: ModelCheckpoint, ReduceLROnPlateau, EarlyStopping")
 
 
 # =============================================
 # 8. TRAIN CNN MODEL
 # =============================================
-print("\n" + "=" * 60)
-print("🚂 TRAINING CNN MODEL")
-print("=" * 60)
 
 BATCH_SIZE = 64
-EPOCHS = 50  # EarlyStopping will handle actual epochs
+EPOCHS = 50 
 
 # Train with data augmentation
 cnn_history = cnn_model.fit(
@@ -360,14 +329,12 @@ cnn_history = cnn_model.fit(
     verbose=1
 )
 
-print("\n✅ CNN Model Training Complete!")
 
 
 # =============================================
 # 9. TRAINING HISTORY VISUALIZATION
 # =============================================
 def plot_training_history(history, model_name="CNN"):
-    """Plot accuracy and loss curves for training and validation"""
     fig, axes = plt.subplots(1, 2, figsize=(16, 6))
 
     # --- Accuracy Plot ---
@@ -399,7 +366,6 @@ def plot_training_history(history, model_name="CNN"):
     plt.savefig(f'{model_name.lower()}_training_history.png',
                 dpi=150, bbox_inches='tight')
     plt.show()
-    print(f"✅ Training history saved as '{model_name.lower()}_training_history.png'")
 
 
 plot_training_history(cnn_history, "CNN")
@@ -408,16 +374,13 @@ plot_training_history(cnn_history, "CNN")
 # =============================================
 # 10. CNN MODEL EVALUATION
 # =============================================
-print("\n" + "=" * 60)
-print("📊 CNN MODEL EVALUATION")
-print("=" * 60)
 
 # Evaluate on test set
 cnn_test_loss, cnn_test_accuracy = cnn_model.evaluate(
     X_test_normalized, y_test_encoded, verbose=0
 )
-print(f"\n🎯 CNN Test Accuracy : {cnn_test_accuracy * 100:.2f}%")
-print(f"📉 CNN Test Loss     : {cnn_test_loss:.4f}")
+print(f"\n CNN Test Accuracy : {cnn_test_accuracy * 100:.2f}%")
+print(f" CNN Test Loss     : {cnn_test_loss:.4f}")
 
 # Predictions
 cnn_predictions = cnn_model.predict(X_test_normalized, verbose=0)
@@ -425,9 +388,7 @@ cnn_predicted_classes = np.argmax(cnn_predictions, axis=1)
 y_test_classes = y_test.flatten()
 
 # Classification Report
-print(f"\n{'='*60}")
-print("CNN CLASSIFICATION REPORT")
-print(f"{'='*60}")
+
 print(classification_report(
     y_test_classes, cnn_predicted_classes,
     target_names=class_names, digits=4
@@ -438,7 +399,6 @@ print(classification_report(
 # 11. CONFUSION MATRIX VISUALIZATION
 # =============================================
 def plot_confusion_matrix(y_true, y_pred, class_names, model_name="CNN"):
-    """Plot beautiful confusion matrix heatmap"""
     cm = confusion_matrix(y_true, y_pred)
 
     plt.figure(figsize=(12, 10))
@@ -459,7 +419,6 @@ def plot_confusion_matrix(y_true, y_pred, class_names, model_name="CNN"):
     plt.savefig(f'{model_name.lower()}_confusion_matrix.png',
                 dpi=150, bbox_inches='tight')
     plt.show()
-    print(f"✅ Confusion matrix saved as '{model_name.lower()}_confusion_matrix.png'")
 
 
 plot_confusion_matrix(y_test_classes, cnn_predicted_classes, class_names, "CNN")
@@ -468,14 +427,10 @@ plot_confusion_matrix(y_test_classes, cnn_predicted_classes, class_names, "CNN")
 # =============================================
 # 12. VISUALIZE FEATURE MAPS
 # =============================================
-print("\n🔍 Visualizing Feature Maps...")
 
 
 def visualize_feature_maps(model, image, layer_names=None):
-    """
-    Visualize what each convolutional layer sees/learns.
-    Shows the internal feature maps of the CNN.
-    """
+    
     if layer_names is None:
         # Get all Conv2D layer names
         layer_names = [
@@ -516,7 +471,6 @@ def visualize_feature_maps(model, image, layer_names=None):
                     dpi=150, bbox_inches='tight')
         plt.show()
 
-    print("✅ Feature maps visualized and saved!")
 
 
 # Show original image
@@ -538,7 +492,6 @@ visualize_feature_maps(cnn_model, sample_image)
 # 13. VISUALIZE PREDICTIONS
 # =============================================
 def plot_predictions(model, X_test, y_test, class_names, num_images=15):
-    """Show predictions with confidence scores"""
     predictions = model.predict(X_test[:num_images], verbose=0)
 
     fig, axes = plt.subplots(3, 5, figsize=(18, 12))
@@ -568,7 +521,6 @@ def plot_predictions(model, X_test, y_test, class_names, num_images=15):
     plt.tight_layout()
     plt.savefig('cnn_predictions.png', dpi=150, bbox_inches='tight')
     plt.show()
-    print("✅ Predictions visualization saved as 'cnn_predictions.png'")
 
 
 plot_predictions(cnn_model, X_test_normalized, y_test, class_names)
@@ -577,12 +529,9 @@ plot_predictions(cnn_model, X_test_normalized, y_test, class_names)
 # =============================================
 # 14. TRANSFER LEARNING - EfficientNetB0
 # =============================================
-print("\n" + "=" * 60)
-print("🔄 TRANSFER LEARNING - EfficientNetB0")
-print("=" * 60)
+
 
 # Resize images to 224x224 for EfficientNet
-print("\n📐 Resizing images to 224x224 for EfficientNet...")
 
 # Use tf.image.resize for efficiency
 X_train_resized = tf.image.resize(X_train_split, (224, 224)).numpy()
@@ -594,24 +543,17 @@ print(f"Resized Test Shape    : {X_test_resized.shape}")
 
 
 def build_transfer_learning_model():
-    """
-    Transfer Learning with EfficientNetB0:
-    - Pre-trained on ImageNet (1000 classes)
-    - Freeze base model weights
-    - Add custom classification head
-    - Fine-tune top layers
-    """
-    # Load pre-trained EfficientNetB0 (without top classification layer)
+  
+    # Load pre-trained EfficientNetB0 
     base_model = EfficientNetB0(
-        weights='imagenet',       # Pre-trained on ImageNet
-        include_top=False,        # Remove original classification head
+        weights='imagenet',      
+        include_top=False,       
         input_shape=(224, 224, 3)
     )
 
     # Freeze base model layers (don't train them initially)
     base_model.trainable = False
 
-    print(f"\n📊 EfficientNetB0 Base Model:")
     print(f"   Total Layers       : {len(base_model.layers)}")
     print(f"   Trainable Params   : {sum(tf.keras.backend.count_params(w) for w in base_model.trainable_weights):,}")
     print(f"   Non-Trainable Params: {sum(tf.keras.backend.count_params(w) for w in base_model.non_trainable_weights):,}")
@@ -644,16 +586,13 @@ tl_model.compile(
     metrics=['accuracy']
 )
 
-print("\n📋 Transfer Learning Model Architecture:")
 tl_model.summary()
 
 
 # =============================================
 # 15. TRAIN TRANSFER LEARNING MODEL (Phase 1)
 # =============================================
-print("\n" + "=" * 60)
-print("🚂 PHASE 1: Training Classification Head (Base Frozen)")
-print("=" * 60)
+
 
 tl_callbacks = [
     callbacks.ModelCheckpoint(
@@ -688,15 +627,12 @@ tl_history_phase1 = tl_model.fit(
     verbose=1
 )
 
-print("\n✅ Phase 1 Training Complete!")
 
 
 # =============================================
 # 16. FINE-TUNING (Phase 2)
 # =============================================
-print("\n" + "=" * 60)
-print("🔧 PHASE 2: Fine-Tuning Top Layers of EfficientNet")
-print("=" * 60)
+
 
 # Unfreeze the top 20 layers of base model for fine-tuning
 base_model.trainable = True
@@ -727,30 +663,25 @@ tl_history_phase2 = tl_model.fit(
     verbose=1
 )
 
-print("\n✅ Phase 2 Fine-Tuning Complete!")
 
 
 # =============================================
 # 17. TRANSFER LEARNING EVALUATION
 # =============================================
-print("\n" + "=" * 60)
-print("📊 TRANSFER LEARNING MODEL EVALUATION")
-print("=" * 60)
+
 
 tl_test_loss, tl_test_accuracy = tl_model.evaluate(
     X_test_resized, y_test_encoded, verbose=0
 )
-print(f"\n🎯 Transfer Learning Test Accuracy : {tl_test_accuracy * 100:.2f}%")
-print(f"📉 Transfer Learning Test Loss     : {tl_test_loss:.4f}")
+print(f"\n Transfer Learning Test Accuracy : {tl_test_accuracy * 100:.2f}%")
+print(f" Transfer Learning Test Loss     : {tl_test_loss:.4f}")
 
 # Predictions
 tl_predictions = tl_model.predict(X_test_resized, verbose=0)
 tl_predicted_classes = np.argmax(tl_predictions, axis=1)
 
 # Classification Report
-print(f"\n{'='*60}")
-print("TRANSFER LEARNING CLASSIFICATION REPORT")
-print(f"{'='*60}")
+
 print(classification_report(
     y_test_classes, tl_predicted_classes,
     target_names=class_names, digits=4
@@ -806,9 +737,7 @@ plt.show()
 # =============================================
 # 18. MODEL COMPARISON
 # =============================================
-print("\n" + "=" * 60)
-print("📊 MODEL COMPARISON RESULTS")
-print("=" * 60)
+
 
 results = {
     'Model': ['Custom CNN', 'EfficientNetB0 (Transfer Learning)'],
@@ -822,13 +751,7 @@ results = {
     ]
 }
 
-print(f"\n{'Model':<40} {'Test Accuracy':<18} {'Test Loss':<12}")
-print("-" * 70)
-for i in range(len(results['Model'])):
-    print(f"{results['Model'][i]:<40} "
-          f"{results['Test Accuracy'][i]:<18} "
-          f"{results['Test Loss'][i]:<12}")
-print("-" * 70)
+
 
 # Comparison bar chart
 fig, ax = plt.subplots(figsize=(10, 6))
@@ -855,7 +778,6 @@ ax.grid(axis='y', alpha=0.3)
 plt.tight_layout()
 plt.savefig('model_comparison.png', dpi=150, bbox_inches='tight')
 plt.show()
-print("✅ Model comparison chart saved!")
 
 
 # =============================================
@@ -863,10 +785,7 @@ print("✅ Model comparison chart saved!")
 # =============================================
 def predict_single_image(model, image_path_or_array, class_names,
                          is_transfer_learning=False):
-    """
-    Predict class for a single image.
-    Can accept file path or numpy array.
-    """
+    
     from PIL import Image
 
     if isinstance(image_path_or_array, str):
@@ -916,7 +835,6 @@ def predict_single_image(model, image_path_or_array, class_names,
 
 
 # Demo: Predict a test image
-print("\n🔮 Single Image Prediction Demo:")
 random_idx = np.random.randint(0, len(X_test_normalized))
 predicted_class, confidence = predict_single_image(
     cnn_model,
@@ -929,86 +847,28 @@ print(f"\nTrue Label: {class_names[y_test[random_idx][0]]}")
 # =============================================
 # 20. SAVE MODELS
 # =============================================
-print("\n" + "=" * 60)
-print("💾 SAVING MODELS")
-print("=" * 60)
+
 
 # Save CNN model
 cnn_model.save('saved_models/cnn_model.h5')
-print("✅ CNN Model saved: saved_models/cnn_model.h5")
 
 # Save Transfer Learning model
 tl_model.save('saved_models/transfer_learning_model.h5')
-print("✅ Transfer Learning Model saved: saved_models/transfer_learning_model.h5")
 
 # Save as SavedModel format (recommended for production)
 cnn_model.save('saved_models/cnn_savedmodel')
-print("✅ CNN SavedModel saved: saved_models/cnn_savedmodel/")
 
-# How to load saved models
-print("\n📖 To load saved models:")
-print("   loaded_model = keras.models.load_model('saved_models/cnn_model.h5')")
+
 
 
 # =============================================
 # 21. FINAL SUMMARY
 # =============================================
-print("\n" + "=" * 60)
-print("🎉 PROJECT COMPLETE - FINAL SUMMARY")
-print("=" * 60)
-print(f"""
-╔══════════════════════════════════════════════════════════╗
-║  IMAGE CLASSIFICATION USING CNN & TRANSFER LEARNING     ║
-╠══════════════════════════════════════════════════════════╣
-║                                                          ║
-║  Dataset          : CIFAR-10 (60,000 images)            ║
-║  Image Size       : 32x32x3 (RGB)                      ║
-║  Classes          : 10                                   ║
-║                                                          ║
-║  ┌─────────────────────────────────────────────────┐    ║
-║  │ MODEL 1: Custom CNN                             │    ║
-║  │ Architecture : 3 Conv Blocks + 2 Dense Layers   │    ║
-║  │ Test Accuracy: {cnn_acc:<37}│    ║
-║  │ Test Loss    : {cnn_loss:<37}│    ║
-║  └─────────────────────────────────────────────────┘    ║
-║                                                          ║
-║  ┌─────────────────────────────────────────────────┐    ║
-║  │ MODEL 2: EfficientNetB0 (Transfer Learning)     │    ║
-║  │ Pre-trained  : ImageNet                          │    ║
-║  │ Fine-tuned   : Last 20 layers                    │    ║
-║  │ Test Accuracy: {tl_acc:<37}│    ║
-║  │ Test Loss    : {tl_loss:<37}│    ║
-║  └─────────────────────────────────────────────────┘    ║
-║                                                          ║
-║  Techniques Used:                                        ║
-║  ✅ Data Augmentation                                    ║
-║  ✅ Batch Normalization                                  ║
-║  ✅ Dropout Regularization                               ║
-║  ✅ Transfer Learning & Fine-Tuning                      ║
-║  ✅ Learning Rate Scheduling                             ║
-║  ✅ Early Stopping                                       ║
-║  ✅ Feature Map Visualization                            ║
-║                                                          ║
-║  Files Generated:                                        ║
-║  📄 sample_images.png                                    ║
-║  📄 class_distribution.png                               ║
-║  📄 augmented_images.png                                 ║
-║  📄 cnn_training_history.png                             ║
-║  📄 cnn_confusion_matrix.png                             ║
-║  📄 feature_map_*.png                                    ║
-║  📄 cnn_predictions.png                                  ║
-║  📄 transfer_learning_history.png                        ║
-║  📄 transfer_learning_confusion_matrix.png               ║
-║  📄 model_comparison.png                                 ║
-║  📦 saved_models/cnn_model.h5                            ║
-║  📦 saved_models/transfer_learning_model.h5              ║
-║                                                          ║
-╚══════════════════════════════════════════════════════════╝
-""".format(
+
+format(
     cnn_acc=f"{cnn_test_accuracy * 100:.2f}%",
     cnn_loss=f"{cnn_test_loss:.4f}",
     tl_acc=f"{tl_test_accuracy * 100:.2f}%",
     tl_loss=f"{tl_test_loss:.4f}"
-))
+)
 
-print("🎯 Project Execution Complete! All models trained and evaluated.")

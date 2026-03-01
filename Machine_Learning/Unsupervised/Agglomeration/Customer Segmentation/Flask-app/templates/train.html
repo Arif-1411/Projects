@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Model Retrained</title>
+</head>
+<body>
+
+<h1>Model Retrained Successfully</h1>
+
+<h2>Updated Metrics</h2>
+<table border="1" cellpadding="5">
+    <tr><td><b>Best Linkage</b></td><td>{{ bundle.metrics.best_linkage }}</td></tr>
+    <tr><td><b>Number of Clusters</b></td><td>{{ bundle.metrics.n_clusters }}</td></tr>
+    <tr><td><b>Total Samples</b></td><td>{{ bundle.metrics.n_samples }}</td></tr>
+    <tr><td><b>Silhouette Score</b></td><td>{{ bundle.metrics.silhouette }}</td></tr>
+    <tr><td><b>Calinski-Harabasz</b></td><td>{{ bundle.metrics.calinski_harabasz }}</td></tr>
+    <tr><td><b>Davies-Bouldin</b></td><td>{{ bundle.metrics.davies_bouldin }}</td></tr>
+</table>
+
+<h2>Linkage Comparison</h2>
+<table border="1" cellpadding="5">
+    <tr>
+        <th>Linkage</th>
+        <th>Silhouette</th>
+        <th>Calinski-Harabasz</th>
+        <th>Davies-Bouldin</th>
+        <th></th>
+    </tr>
+    {% for r in bundle.linkage_results %}
+    <tr>
+        <td>{{ r.linkage }}</td>
+        <td>{{ r.silhouette }}</td>
+        <td>{{ r.calinski_harabasz }}</td>
+        <td>{{ r.davies_bouldin }}</td>
+        <td>{% if r.linkage == bundle.metrics.best_linkage %} BEST{% endif %}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+<a href="/">Back to Home</a>
+
+</body>
+</html>
