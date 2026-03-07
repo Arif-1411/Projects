@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Car Classifier</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+      max-width: 460px;
+      width: 100%;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+
+    h1 { font-size: 22px; margin-bottom: 6px; color: #111; }
+    .sub { color: #666; font-size: 13px; margin-bottom: 24px; line-height: 1.5; }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 24px;
+    }
+    .badge {
+      background: #eff6ff;
+      color: #2563eb;
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      border: 1px solid #dbeafe;
+    }
+
+    .drop-zone {
+      border: 2px dashed #d1d5db;
+      border-radius: 10px;
+      padding: 36px 20px;
+      text-align: center;
+      cursor: pointer;
+      margin-bottom: 16px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .drop-zone:hover { border-color: #2563eb; background: #f8faff; }
+    .drop-zone input[type="file"] { display: none; }
+    .drop-zone label { cursor: pointer; }
+    .drop-zone .icon { font-size: 32px; margin-bottom: 8px; display: block; }
+    .drop-zone .main-text { font-size: 14px; color: #444; }
+    .drop-zone .browse { color: #2563eb; font-weight: 600; }
+    .drop-zone .hint-text { font-size: 11px; color: #aaa; margin-top: 6px; display: block; }
+
+    .preview-wrap {
+      display: none;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .preview-wrap img {
+      max-width: 100%;
+      max-height: 200px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+    }
+    .file-name { font-size: 12px; color: #888; margin-top: 6px; }
+
+    .error { color: #dc2626; font-size: 13px; margin-bottom: 14px; padding: 10px 14px;
+             background: #fef2f2; border-radius: 6px; border: 1px solid #fecaca; }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #2563eb;
+      color: white;
+      font-size: 15px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+    button:hover    { background: #1d4ed8; }
+    button:disabled { background: #93c5fd; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h1>Car Classifier</h1>
+    <p class="sub">EfficientNetB0 Transfer Learning — upload a car image to identify the model.</p>
+
+    <div class="badges">
+      {% for name in ['Audi', 'Hyundai Creta', 'Mahindra Scorpio',
+                      'Rolls Royce', 'Swift', 'Tata Safari', 'Toyota Innova'] %}
+        <span class="badge">{{ name }}</span>
+      {% endfor %}
+    </div>
+
+    {% if error %}
+      <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <form action="/predict" method="POST" enctype="multipart/form-data" id="form">
+
+      <div class="drop-zone" id="drop-zone">
+        <input type="file" name="image" id="file-input" accept=".jpg,.jpeg,.png,.webp">
+        <label for="file-input">
+          <span class="icon">&#128444;</span>
+          <span class="main-text">Drop image here or <span class="browse">browse</span></span>
+          <span class="hint-text">JPG, PNG, WEBP supported</span>
+        </label>
+      </div>
+
+      <div class="preview-wrap" id="preview-wrap">
+        <img id="preview-img" src="" alt="preview">
+        <div class="file-name" id="file-name"></div>
+      </div>
+
+      <button type="submit" id="submit-btn" disabled>Classify Image</button>
+
+    </form>
+  </div>
+
+  <script>
+    const fileInput  = document.getElementById('file-input');
+    const previewImg = document.getElementById('preview-img');
+    const previewWrap= document.getElementById('preview-wrap');
+    const fileName   = document.getElementById('file-name');
+    const submitBtn  = document.getElementById('submit-btn');
+
+    fileInput.addEventListener('change', function () {
+      const file = this.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        previewImg.src        = e.target.result;
+        previewWrap.style.display = 'block';
+        fileName.textContent  = file.name;
+        submitBtn.disabled    = false;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    document.getElementById('form').addEventListener('submit', function () {
+      submitBtn.disabled    = true;
+      submitBtn.textContent = 'Classifying...';
+    });
+  </script>
+
+</body>
+</html>
